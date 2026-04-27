@@ -59,7 +59,10 @@ const Jogo = () => {
       setColors(extractedColors);
 
     } catch (error) {
-      console.error("Erro na API:", error);
+      // Isso vai imprimir no terminal do seu VS Code o motivo exato da recusa
+      console.log("QUEM DEU ERRO:", error.config?.url);
+      console.log("MOTIVO:", error.response?.data || error.message);
+      
       Alert.alert("Erro", "Não foi possível carregar o filme. Verifique sua API Key.");
     } finally {
       setLoading(false);
