@@ -24,42 +24,42 @@ const Jogo = () => {
     setUserInput('');
 
     try {
-      // 1. Busca filmes populares e escolhe um aleatoriamente
+      //Busca filmes populares e escolhe um
       const response = await api.get('/movie/popular');
       const movies = response.data.results;
       const randomMovie = movies[Math.floor(Math.random() * movies.length)];
 
-      // 2. Busca os créditos para pegar o ator principal
+      //Busca o ator principal
       const creditsResponse = await api.get(`/movie/${randomMovie.id}/credits`);
       const mainActor = creditsResponse.data.cast[0]?.name || 'Elenco não encontrado';
 
-      // 3. Monta a URL do poster
+      //Monta a URL do poster
       const imageUrl = `https://image.tmdb.org/t/p/w500${randomMovie.poster_path}`;
 
-      // 4. Extrai as cores da imagem usando a Imagga API
+      //Extrai as cores da imagem usando API
       const colorResponse = await axios.get(`https://api.imagga.com/v2/colors?image_url=${encodeURIComponent(imageUrl)}`, {
         headers: {
           'Authorization': process.env.EXPO_PUBLIC_IMAGGA_AUTH
         }
       });
 
-      // A Imagga retorna um array organizado de cores dominantes. Vamos pegar o código HEX das 5 principais.
+      //Pega as 5 pricipais cores da imagem
       let extractedColors = colorResponse.data.result.colors.image_colors
         .slice(0, 5)
         .map(color => color.html_code);
 
-      // Garante que teremos 5 cores na tela, preenchendo com cinza se a imagem for muito simples
+      //Garante as 5 cores
       while(extractedColors.length < 5) {
          extractedColors.push('#cccccc');
       }
 
-      // 5. Salva tudo nos estados
+      //Salva os dados
       setMovie(randomMovie);
       setCastName(mainActor);
       setColors(extractedColors);
 
     } catch (error) {
-      // Isso vai imprimir no terminal do seu VS Code o motivo exato da recusa
+      //Motivo do erro
       console.log("QUEM DEU ERRO:", error.config?.url);
       console.log("MOTIVO:", error.response?.data || error.message);
       
@@ -91,7 +91,7 @@ const Jogo = () => {
       
       if (attempts >= 3) {
         Alert.alert(
-          "Game Over", 
+          "Fim de jogo :(", 
           `O filme era: ${movie.title}`,
           [{ text: "Tentar Outro", onPress: loadNewMovie }]
         );
@@ -159,7 +159,7 @@ const Jogo = () => {
         onChangeText={setUserInput}
         style={styles.input}
       />
-      <Button title="Chutar" onPress={handleGuess} disabled={attempts > 3} />
+      <Button title="Enviar" onPress={handleGuess} disabled={attempts > 3} />
     </View>
   );
 };
