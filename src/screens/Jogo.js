@@ -25,7 +25,7 @@ const Jogo = () => {
 
     try {
       //Busca filmes populares e escolhe um
-      const response = await api.get('/movie/popular');
+      const response = await api.get('/movie/top_rated');
       const movies = response.data.results;
       const randomMovie = movies[Math.floor(Math.random() * movies.length)];
 
@@ -121,7 +121,15 @@ const Jogo = () => {
         ))}
       </View>
 
-      <View style={styles.hintsContainer}>
+      <TextInput
+        placeholder="Digite o nome do filme..."
+        value={userInput}
+        onChangeText={setUserInput}
+        style={styles.input}
+      />
+      <Button title="Enviar" onPress={handleGuess} disabled={attempts > 3} />
+
+      <View style={[styles.hintsContainer, { marginTop: 20 }]}>
         
         {/* Erro 1: Ano e Gêneros */}
         {attempts >= 1 && (
@@ -153,13 +161,6 @@ const Jogo = () => {
         )}
       </View>
 
-      <TextInput
-        placeholder="Digite o nome do filme..."
-        value={userInput}
-        onChangeText={setUserInput}
-        style={styles.input}
-      />
-      <Button title="Enviar" onPress={handleGuess} disabled={attempts > 3} />
     </View>
   );
 };
